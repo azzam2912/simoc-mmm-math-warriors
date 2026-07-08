@@ -112,6 +112,23 @@ function parseFactor(s: ParseState): Rational | string {
 	return 'expected a number or "("';
 }
 
+export interface EvalResult {
+	value: Rational;
+	numbersUsed: number[];
+}
+
+/** Parse and evaluate a bare expression; returns an error string when malformed. */
+export function evaluateExpression(input: string): EvalResult | { error: string } {
+	const tokens = tokenize(input.trim());
+	if (typeof tokens === 'string') return { error: tokens };
+	if (tokens.length === 0) return { error: 'empty expression' };
+	const s: ParseState = { tokens, pos: 0, numbersUsed: [] };
+	const value = parseExpr(s);
+	if (typeof value === 'string') return { error: value };
+	if (s.pos !== tokens.length) return { error: 'unexpected trailing input' };
+	return { value, numbersUsed: s.numbersUsed };
+}
+
 export interface ValidateOptions {
 	requireAllFour?: boolean;
 }
@@ -126,24 +143,19 @@ export function validate(
 	target: number,
 	options: ValidateOptions = {}
 ): ValidationResult {
-	const tokens = tokenize(input.trim());
-	if (typeof tokens === 'string') return { ok: false, error: tokens };
-	if (tokens.length === 0) return { ok: false, error: 'empty expression' };
-
-	const s: ParseState = { tokens, pos: 0, numbersUsed: [] };
-	const value = parseExpr(s);
-	if (typeof value === 'string') return { ok: false, error: value };
-	if (s.pos !== tokens.length) return { ok: false, error: 'unexpected trailing input' };
+	const parsed = evaluateExpression(input);
+	if ('error' in parsed) return { ok: false, error: parsed.error };
+	const { value, numbersUsed } = parsed;
 
 	// Multiset consumption of corners — handles duplicate corner numbers.
 	const remaining = [...corners];
-	for (const used of s.numbersUsed) {
+	for (const used of numbersUsed) {
 		const idx = remaining.indexOf(used);
 		if (idx === -1) return { ok: false, error: `${used} is not an available corner number` };
 		remaining.splice(idx, 1);
 	}
 
-	if (s.numbersUsed.length < 2) return { ok: false, error: 'use at least 2 corner numbers' };
+	if (numbersUsed.length < 2) return { ok: false, error: 'use at least 2 corner numbers' };
 	if (options.requireAllFour && remaining.length > 0) {
 		return { ok: false, error: 'use all 4 corner numbers' };
 	}

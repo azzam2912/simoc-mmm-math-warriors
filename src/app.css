@@ -1,0 +1,110 @@
+@import '@fontsource/titan-one';
+@import '@fontsource/nunito/400.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/nunito/900.css';
+
+:root {
+	--fire-1: #ff5e00;
+	--fire-2: #ffc400;
+	--fire-3: #ff2d00;
+	--bg-deep: #170805;
+	--bg-panel: rgba(255, 255, 255, 0.06);
+	--bg-panel-strong: rgba(255, 255, 255, 0.1);
+	--text: #fff3e6;
+	--text-dim: #d9b8a3;
+	--green-1: #2fbf4f;
+	--green-2: #0d7a2a;
+	--blue-1: #3f8dff;
+	--blue-2: #1a4dbf;
+	--radius: 14px;
+	font-family: Nunito, system-ui, sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	color: var(--text);
+	background:
+		radial-gradient(ellipse 120% 60% at 50% 115%, rgba(255, 94, 0, 0.55), transparent 60%),
+		radial-gradient(ellipse 80% 40% at 50% 108%, rgba(255, 196, 0, 0.35), transparent 55%),
+		radial-gradient(ellipse 100% 80% at 50% -30%, #3a1208, transparent 70%),
+		var(--bg-deep);
+	background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+.display {
+	font-family: 'Titan One', Nunito, system-ui, sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.03em;
+}
+
+.fire-text {
+	background: linear-gradient(180deg, var(--fire-2) 10%, var(--fire-1) 55%, var(--fire-3) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
+}
+
+button {
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+.btn {
+	display: inline-block;
+	padding: 0.6em 1.4em;
+	border-radius: var(--radius);
+	background: linear-gradient(180deg, var(--fire-2), var(--fire-1));
+	color: #2b0d00;
+	font-weight: 900;
+	font-size: 1rem;
+	box-shadow:
+		0 3px 0 #a33500,
+		0 6px 14px rgba(0, 0, 0, 0.4);
+	transition:
+		transform 80ms,
+		box-shadow 80ms,
+		filter 120ms;
+}
+
+.btn:hover:not(:disabled) {
+	filter: brightness(1.1);
+}
+
+.btn:active:not(:disabled) {
+	transform: translateY(2px);
+	box-shadow:
+		0 1px 0 #a33500,
+		0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn:disabled {
+	filter: grayscale(0.8) brightness(0.7);
+	cursor: not-allowed;
+}
+
+.btn.secondary {
+	background: var(--bg-panel-strong);
+	color: var(--text);
+	box-shadow:
+		0 3px 0 rgba(0, 0, 0, 0.5),
+		0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.panel {
+	background: var(--bg-panel);
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: var(--radius);
+	backdrop-filter: blur(6px);
+}
